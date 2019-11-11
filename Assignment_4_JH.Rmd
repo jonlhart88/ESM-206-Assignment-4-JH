@@ -6,22 +6,29 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 13, fig.height = 10)
 ```
 
-![](California-Spiny-Lobster.jpg)
+![](California-Spiny-Lobster.jpg){width=400px} 
+
 **Figure 1.** California Spiny Lobster *(Credit: [Catalina Island Marine Institute](https://cimioutdoored.org/ca-spiny-lobster/))*
 
-![](lobster_site_locations.PNG)  
+![](lobster_site_locations.PNG){width=500px}
+
 **Figure 2.** The five sampling locations *Credit: [EDI Data Portal](https://portal.edirepository.org/nis/mapbrowse?scope=knb-lter-sbc&identifier=77&revision=newest)*
 
+
 ```{r, include =FALSE}
+# Attach packages
+
 library(tidyverse)
 library(janitor)
 library(here)
 ```
 
 ```{r}
+# Read in data and clean
+
 lobster_abundance <- read_csv("lobster_abundance_sbc_lter.csv",
   na = "-99999") %>% 
   clean_names() 
@@ -29,33 +36,48 @@ lobster_abundance <- read_csv("lobster_abundance_sbc_lter.csv",
 ```
 
 ```{r}
+# Wrangle data for lobster count year/site
+
 lobster_count_year <- lobster_abundance %>% 
   group_by(year, site) %>% 
   summarize(total_count_site = sum(count, na.rm = TRUE)) %>% 
-  mutate(MPA = site == "IVEE" | site == "NAPL")
+  mutate(MPA = case_when(
+    site %in% c("IVEE", "NAPL") ~ "Protected Marine Area Site",
+    site %in% c("AQUE", "MOHK", "CARP") ~ "Non-Marine Protected Site")) %>% 
+  mutate(site_name = case_when(
+    site == "IVEE" ~  "4) Isla Vista",
+    site == "NAPL" ~ "5) Naples",  
+    site == "AQUE" ~ "1) Arroyo Quemado",
+    site == "MOHK" ~ "3) Mohawk",
+    site == "CARP" ~ "2) Carpenteria")) 
 ```
 
+
+
 ```{r}
+# Graph annual lobster counts by site over time
+
 ggplot(data = lobster_count_year, aes(x = year, y = total_count_site)) +
-  geom_point(size = 1.5) +
-  geom_line(aes(color = MPA),
-                size = 1,
-                show.legend = FALSE) + 
-  scale_x_continuous(breaks = seq(2012, 2018, by = 1),
-                     limits = c(2012, 2019),
+  geom_line(aes(color = MPA), 
+                size = 1.5,
+                show.legend = TRUE) + 
+  geom_point(size = 2) +
+  scale_x_continuous(breaks = seq(2012, 2018, by = 2),
+                     limits = c(2011.5, 2018.5),
                      expand = c(0,0)) +
   scale_y_continuous(breaks = seq(0, 900, by = 150),
                      expand = c(0,0),
                      limits = c(0, 1000)) +
-  theme_classic() +
-  facet_wrap(~site) +
+  theme_bw() +
+  facet_wrap(~site_name, scales = "free_x", nrow = 2) +
   labs(x = "Year",
        y = "Lobster Count",
-       title = "Lobster Counts by Site",
+       title = "Lobster Counts by Kelp Forest Study Site",
        subtitle = "2010 - 2018",
        caption = "Insert caption here") +
   theme(axis.text.x = element_text(angle= 90, hjust = 1)) +
-  theme(panel.grid.major = element_line(size = 1))
+  theme(panel.grid.major = element_line(size = 1)) +
+  theme(legend.position = c(.85,.25))
         
 
 ```
