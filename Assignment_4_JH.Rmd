@@ -26,15 +26,16 @@ lobster_abundance <- read_csv("lobster_abundance_sbc_lter.csv",
 ```{r}
 lobster_count_year <- lobster_abundance %>% 
   group_by(year, site) %>% 
-  summarize(total_count_site = sum(count, na.rm = TRUE))  
+  summarize(total_count_site = sum(count, na.rm = TRUE)) %>% 
+  mutate(MPA = site == "IVEE" | site == "NAPL")
 ```
 
 ```{r}
 ggplot(data = lobster_count_year, aes(x = year, y = total_count_site)) +
-  geom_point(size = 1) +
-  geom_line(aes(color = site), 
-            size = .75,
-            show.legend = FALSE) +
+  geom_point(size = 1.5) +
+  geom_line(aes(color = MPA),
+                size = 1,
+                show.legend = FALSE) + 
   scale_x_continuous(breaks = seq(2012, 2018, by = 1),
                      limits = c(2012, 2019),
                      expand = c(0,0)) +
