@@ -45,9 +45,10 @@ ggplot(data = lobster_count_year, aes(x = year, y = total_count_site)) +
   theme_classic() +
   facet_wrap(~site) +
   labs(x = "Year",
-         y = "Lobster Count",
-         title = "Lobster Counts by Site",
-         subtitle = "2010 - 2018") +
+       y = "Lobster Count",
+       title = "Lobster Counts by Site",
+       subtitle = "2010 - 2018",
+       caption = "Insert caption here") +
   theme(axis.text.x = element_text(angle= 90, hjust = 1)) +
   theme(panel.grid.major = element_line(size = 1))
         
