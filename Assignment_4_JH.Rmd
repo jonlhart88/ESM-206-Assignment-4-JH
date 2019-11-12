@@ -1,5 +1,5 @@
 ---
-title: "Assignment_4_Draft"
+title: "Analysis of Spiny lobster abundance, community size structure, and fishing pressure along the Santa Barbara coast (2012-2018)"
 author: "Jon Hart & Wes Newbury"
 date: "11/10/2019"
 output: html_document
@@ -8,6 +8,7 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width = 13, fig.height = 10)
 ```
+### Introduction
 
 ![](California-Spiny-Lobster.jpg){width=400px} 
 
@@ -17,7 +18,11 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width 
 
 **Figure 2.** The five sampling locations *(Credit: [EDI Data Portal](https://portal.edirepository.org/nis/mapbrowse?scope=knb-lter-sbc&identifier=77&revision=newest))*
 
+### Data and Methods
 
+
+
+### Results
 ```{r, include =FALSE}
 # Attach packages
 
@@ -35,7 +40,6 @@ lobster_abundance <- read_csv("lobster_abundance_sbc_lter.csv",
   
 ```
 
-## Part A
 
 ```{r}
 # Wrangle data for lobster count per year/site
@@ -88,5 +92,11 @@ ggplot(data = lobster_count_year, aes(x = year,
 
 ```
 
-## Part B
+### Summary
+
+
+### References 
+
+**Reed D. 2019.** SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (Panulirus interruptus), ongoing since 2012. Environmental Data Initiative. https://doi.org/10.6073/pasta/a593a675d644fdefb736750b291579a0. Dataset accessed 10/30/2019.
+
 
