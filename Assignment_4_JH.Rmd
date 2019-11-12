@@ -85,12 +85,27 @@ ggplot(data = lobster_count_year, aes(x = year,
        caption = "Insert caption here") +
   theme(axis.text.x = element_text(angle= 90, 
                                    hjust = 1)) +
-  theme(panel.grid.major = element_line(size = 1)) +
-  theme(legend.position = c(.85,.25)) +
-  theme(legend.title = element_blank())
+  theme(panel.grid.major = element_line(size = 1),
+        legend.position = c(.85,.25),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 15),
+        plot.title = element_text(size = 18),
+        plot.subtitle = element_text(size = 15)) 
         
 
 ```
+
+```{r}
+# Part B
+
+lobster_size_tidy <- lobster_abundance %>% 
+  uncount(count) %>% 
+  filter(year %in% c(2012, 2018)) %>% 
+  select(year, site, size_mm) 
+  
+```
+
+
 
 ### Summary
 
