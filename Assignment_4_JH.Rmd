@@ -35,6 +35,8 @@ lobster_abundance <- read_csv("lobster_abundance_sbc_lter.csv",
   
 ```
 
+## Part A
+
 ```{r}
 # Wrangle data for lobster count per year/site
 
@@ -84,4 +86,6 @@ ggplot(data = lobster_count_year, aes(x = year,
         
 
 ```
+
+## Part B
 
