@@ -96,7 +96,7 @@ ggplot(data = lobster_count_year, aes(x = year,
 ```
 
 ```{r}
-# Part B
+# Part B Data
 
 lobster_size_tidy <- lobster_abundance %>% 
   uncount(count) %>% 
@@ -105,6 +105,26 @@ lobster_size_tidy <- lobster_abundance %>%
   
 ```
 
+```{r}
+# Part B Graph
+
+
+```
+
+
+
+
+```{r}
+# Part C Data
+
+
+```
+
+```{r}
+# Part C Graph
+
+
+```
 
 
 ### Summary
