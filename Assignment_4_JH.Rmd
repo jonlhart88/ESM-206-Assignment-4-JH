@@ -132,8 +132,39 @@ lobster_stats_tidy <- lobster_data_tidy %>%
 ```
 
 ```{r}
-# Summary statistics table
+# Statistics analysis data frames
 
+mpa_2012 <- lobster_stats_tidy %>% 
+  filter(year == 2012, mpa == "mpa") 
+
+nonmpa_2012 <- lobster_stats_tidy %>% 
+  filter(year == 2012, mpa == "non-mpa") 
+
+mpa_2018 <- lobster_stats_tidy %>% 
+  filter(year == 2018, mpa == "mpa") 
+
+nonmpa_2018 <- lobster_stats_tidy %>% 
+  filter(year == 2018, mpa == "non-mpa") 
+
+# Means
+mean_mpa_2012 <- mean(mpa_2012$size_mm, na.rm = TRUE) 
+mean_nonmpa_2012 <- mean(nonmpa_2012$size_mm, na.rm = TRUE)
+mean_mpa_2018 <- mean(mpa_2018$size_mm, na.rm = TRUE)
+mean_nonmpa_2018 <- mean(nonmpa_2018$size_mm)
+
+# Standard Deviations
+sd_mpa_2012 <- sd(mpa_2012$size_mm, na.rm = TRUE) 
+sd_nonmpa_2012 <- sd(nonmpa_2012$size_mm, na.rm = TRUE)
+sd_mpa_2018 <- sd(mpa_2018$size_mm, na.rm = TRUE)
+sd_nonmpa_2018 <- sd(nonmpa_2018$size_mm)
+
+# Sample Sizes
+n_mpa_2012 <- sum(!is.na(mpa_2012$size_mm))
+n_nonmpa_2012 <- sum(!is.na(nonmpa_2012$size_mm))
+n_mpa_2018 <- sum(!is.na(mpa_2018$size_mm))
+n_nonmpa_2018 <- sum(!is.na(nonmpa_2018$size_mm))
+
+# Stats Summary Table
 lobster_summary_table <- lobster_stats_tidy %>% 
   summarize(mean_size = mean(size_mm, na.rm = TRUE),
             sd_size = sd(size_mm, na.rm = TRUE),
@@ -165,8 +196,8 @@ lobster_2012_ttest
 
 ```
 
-Mean lobster size differed significantly between MPA and non-MPA sites in 2012 for the sites sampled (t(`r round(lobster_2012_ttest$parameter, 2)`) = `r round(lobster_2012_ttest$statistic, 2)`, *p* < 0.01). 
 
+Mean lobster size in MPA sites sampled in 2012 (`r round(mean_mpa_2012, 2)` $\pm$ `r round(sd_mpa_2012, 2)`, n = `r n_mpa_2012`) differed significantly from lobsters sampled in non-MPA sites in 2012 (`r round(mean_nonmpa_2012, 2)` $\pm$ `r round(sd_nonmpa_2012, 2)`, n = `r n_nonmpa_2012`) by a two-sided t-test (t(`r round(lobster_2012_ttest$parameter, 2)`) = `r round(lobster_2012_ttest$statistic, 2)`, *p* < 0.01). 
 
 
 ```{r}
@@ -183,6 +214,7 @@ lobster_2018_nonmpa <- lobster_stats_tidy %>%
 lobster_2018_ttest <- t.test(lobster_2018_mpa, lobster_2018_nonmpa)
 lobster_2018_ttest
 ```
+
 
 Mean lobster size differed significantly between MPA and non-MPA sites in 2018 for the sites sampled (t(`r round(lobster_2018_ttest$parameter, 2)`) = `r round(lobster_2018_ttest$statistic, 2)`, *p* < 0.001). 
 
