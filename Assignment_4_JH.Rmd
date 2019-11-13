@@ -29,6 +29,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width 
 library(tidyverse)
 library(janitor)
 library(here)
+library(kableExtra)
 ```
 
 
@@ -168,12 +169,31 @@ n_nonmpa_2018 <- sum(!is.na(nonmpa_2018$size_mm))
 lobster_summary_table <- lobster_stats_tidy %>% 
   summarize(mean_size = mean(size_mm, na.rm = TRUE),
             sd_size = sd(size_mm, na.rm = TRUE),
-            sample_n = n()) %>% 
-  rename(Marine_Protected_Area = mpa,
-         Year = year,
-         Mean_Size = mean_size,
-         Size_Standard_Deviation = sd_size,
-         Sample_Size = sample_n) 
+            sample_n = n())
+```
+
+
+```{r}
+# Make the table of lobster sample statistics:
+
+lobster_summary_table %>% 
+  kable(col.names = c("Year", 
+                     "MPA/non-MPA Site", 
+                     "Mean lobster size (mm)",
+                     "Standard Deviation (mm)",
+                     "Sample Size")
+        ) %>% 
+  kable_styling(bootstrap_options = "striped", "hover", 
+                full_width = F,
+                position = "center") %>% 
+                row_spec(c(1,3), 
+                         bold = T, 
+                         color = "white", 
+                         background = "blue") %>% 
+  add_header_above(c("Lobster Size Statistics" = 5))
+
+
+  
 ```
 
 
