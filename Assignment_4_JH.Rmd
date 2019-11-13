@@ -31,13 +31,17 @@ library(janitor)
 library(here)
 ```
 
+
+
 ```{r}
 # Read in data and do some basic cleaning
 
 lobster_abundance <- read_csv("lobster_abundance_sbc_lter.csv",
   na = "-99999") %>% 
   clean_names() 
-  
+
+lobster_data_tidy <- lobster_abundance %>% 
+  uncount(count)
 ```
 
 
@@ -47,7 +51,7 @@ lobster_abundance <- read_csv("lobster_abundance_sbc_lter.csv",
 lobster_count_year <- lobster_abundance %>% 
   group_by(year, site) %>% 
   summarize(total_count_site = sum(count, na.rm = TRUE)) %>% 
-  mutate(MPA = case_when(
+  mutate(mpa = case_when(
     site %in% c("IVEE", "NAPL") ~ "Site within Marine Protected Area",
     site %in% c("AQUE", "MOHK", "CARP") ~ "Site outside Marine Protected Area")) %>%   mutate(site_name = case_when(
     site == "IVEE" ~ "4) Isla Vista",
@@ -64,7 +68,7 @@ lobster_count_year <- lobster_abundance %>%
 
 ggplot(data = lobster_count_year, aes(x = year, 
                                       y = total_count_site)) +
-  geom_line(aes(color = MPA), 
+  geom_line(aes(color = mpa), 
                 size = 1.5,
                 show.legend = TRUE) + 
   geom_point(size = 2) +
@@ -98,10 +102,10 @@ ggplot(data = lobster_count_year, aes(x = year,
 ```{r}
 # Part B Data
 
-lobster_size_tidy <- lobster_abundance %>% 
-  uncount(count) %>% 
+lobster_size_site <- lobster_data_tidy %>% 
   filter(year %in% c(2012, 2018)) %>% 
-  select(year, site, size_mm) 
+  select(year, site, size_mm) %>% 
+  group_by(year, site)
   
 ```
 
@@ -115,14 +119,73 @@ lobster_size_tidy <- lobster_abundance %>%
 
 
 ```{r}
-# Part C Data
+# Part C data wrangling
 
+lobster_stats_tidy <- lobster_data_tidy %>% 
+  mutate(mpa = case_when(
+    site %in% c("IVEE", "NAPL") ~ "mpa",
+    site %in% c("AQUE", "MOHK", "CARP") ~ "non-mpa")) %>%   
+  filter(year %in% c(2012, 2018)) %>% 
+  select(year, site, size_mm, mpa) %>% 
+  group_by(year, mpa)  
 
 ```
 
 ```{r}
-# Part C Graph
+# Summary statistics table
 
+lobster_summary_table <- lobster_stats_tidy %>% 
+  summarize(mean_size = mean(size_mm, na.rm = TRUE),
+            sd_size = sd(size_mm, na.rm = TRUE),
+            sample_n = n()) %>% 
+  rename(Marine_Protected_Area = mpa,
+         Year = year,
+         Mean_Size = mean_size,
+         Size_Standard_Deviation = sd_size,
+         Sample_Size = sample_n) 
+```
+
+
+
+```{r}
+# Part C Statistics
+
+# 1. For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
+
+lobster_2012_mpa <- lobster_stats_tidy %>% 
+  filter(year == 2012, mpa == "mpa") %>% 
+  pull(size_mm)
+
+lobster_2012_nonmpa <- lobster_stats_tidy %>% 
+  filter(year == 2012, mpa == "non-mpa") %>% 
+  pull(size_mm)
+
+lobster_2012_ttest <- t.test(lobster_2012_mpa, lobster_2012_nonmpa)
+lobster_2012_ttest
+
+
+# 2. For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
+
+lobster_2018_mpa <- lobster_stats_tidy %>% 
+  filter(year == 2018, mpa == "mpa") %>% 
+  pull(size_mm)
+
+lobster_2018_nonmpa <- lobster_stats_tidy %>% 
+  filter(year == 2018, mpa == "non-mpa") %>% 
+  pull(size_mm)
+
+lobster_2018_ttest <- t.test(lobster_2018_mpa, lobster_2018_nonmpa)
+lobster_2018_ttest
+
+# 3. For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
+
+mpa_2012_2018_ttest <- t.test(lobster_2012_mpa, lobster_2018_mpa)
+mpa_2012_2018_ttest
+
+# 4. For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
+
+nonmpa_2012_2018_ttest <- t.test(lobster_2012_nonmpa, lobster_2018_nonmpa)
+nonmpa_2012_2018_ttest
 
 ```
 
