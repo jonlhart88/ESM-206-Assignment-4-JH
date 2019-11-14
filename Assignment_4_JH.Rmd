@@ -67,7 +67,7 @@ lobster_count_year <- lobster_abundance %>%
 
 
 ```{r}
-# Graph annual lobster counts by site over time
+# Graph annual lobster counts by site for 2012-2018
 
 ggplot(data = lobster_count_year, aes(x = year, 
                                       y = total_count_site)) +
@@ -89,7 +89,7 @@ ggplot(data = lobster_count_year, aes(x = year,
        y = "Lobster Count",
        title = "Lobster Counts by Kelp Forest Study Site",
        subtitle = "2012 - 2018",
-       caption = "Insert caption here") +
+       caption = "Figure 3. Annual lobster counts for each of the five sampling locations from 2012-2018. Isla Vista and Naples sites are within a Marine Protected Area while Carpenteria, Mohawk, and Arroyo sites are outside an MPA.") +
   theme(axis.text.x = element_text(angle= 90, 
                                    hjust = 1)) +
   theme(panel.grid.major = element_line(size = 1),
@@ -103,7 +103,7 @@ ggplot(data = lobster_count_year, aes(x = year,
 ```
 
 ```{r}
-# Part B Data
+# Wrangle data for lobster size distribution graph
 
 lobster_size_site <- lobster_data_tidy %>% 
   filter(year %in% c(2012, 2018)) %>% 
@@ -122,7 +122,7 @@ lobster_size_site <- lobster_data_tidy %>%
 
 
 ```{r}
-# Part C data wrangling
+# Initial data wrangling for lobster site statistical analysis
 
 lobster_stats_tidy <- lobster_data_tidy %>% 
   mutate(mpa = case_when(
@@ -135,7 +135,7 @@ lobster_stats_tidy <- lobster_data_tidy %>%
 ```
 
 ```{r}
-# Statistics analysis data frames
+# Create statistical analysis data frames
 
 mpa_2012 <- lobster_stats_tidy %>% 
   filter(year == 2012, mpa == "MPA") 
@@ -149,25 +149,25 @@ mpa_2018 <- lobster_stats_tidy %>%
 nonmpa_2018 <- lobster_stats_tidy %>% 
   filter(year == 2018, mpa == "non-MPA") 
 
-# Means
+# Calculate Means
 mean_mpa_2012 <- mean(mpa_2012$size_mm, na.rm = TRUE) 
 mean_nonmpa_2012 <- mean(nonmpa_2012$size_mm, na.rm = TRUE)
 mean_mpa_2018 <- mean(mpa_2018$size_mm, na.rm = TRUE)
 mean_nonmpa_2018 <- mean(nonmpa_2018$size_mm, na.rm = TRUE)
 
-# Standard Deviations
+# Calculate Standard Deviations
 sd_mpa_2012 <- sd(mpa_2012$size_mm, na.rm = TRUE) 
 sd_nonmpa_2012 <- sd(nonmpa_2012$size_mm, na.rm = TRUE)
 sd_mpa_2018 <- sd(mpa_2018$size_mm, na.rm = TRUE)
 sd_nonmpa_2018 <- sd(nonmpa_2018$size_mm, na.rm = TRUE)
 
-# Sample Sizes
+# Calculate Sample Sizes
 n_mpa_2012 <- sum(!is.na(mpa_2012$size_mm))
 n_nonmpa_2012 <- sum(!is.na(nonmpa_2012$size_mm))
 n_mpa_2018 <- sum(!is.na(mpa_2018$size_mm))
 n_nonmpa_2018 <- sum(!is.na(nonmpa_2018$size_mm))
 
-# Stats Summary Table
+# Wrangle data for statistics summary table
 lobster_summary_table <- lobster_stats_tidy %>% 
   summarize(mean_size = mean(size_mm, na.rm = TRUE),
             sd_size = sd(size_mm, na.rm = TRUE),
@@ -178,26 +178,22 @@ lobster_summary_table <- lobster_stats_tidy %>%
 
 
 ```{r}
-# Make the table of lobster sample statistics:
+# Make a table for lobster size sample statistics:
 
 lobster_summary_table %>% 
   kable(col.names = c("Year", 
-                     "MPA/non-MPA Site", 
+                     "MPA or non-MPA Sites", 
                      "Mean lobster size (mm)",
                      "Standard Deviation (mm)",
-                     "Sample Size")
+                     "Sample Size (# of lobsters)"),
+        caption = "Figure 4. Lobster size statistics grouped in MPA and non-MPA sites in 2012 and 2018."
         ) %>% 
-  kable_styling(bootstrap_options = "striped", "hover", 
+  kable_styling(bootstrap_options = c("striped", "bordered"),
                 full_width = F,
                 position = "center") %>% 
   row_spec(c(1,3), 
-           bold = T, 
-           color = "white", 
-           background = "blue") %>% 
-  add_header_above(c("Lobster Size Statistics" = 5))  
-
-
-  
+           bold = T) 
+ 
 ```
 
 
@@ -259,6 +255,7 @@ Mean lobster size differed significantly between MPA and non-MPA sites in 2018 f
 nonmpa_2012_2018_ttest <- t.test(lobster_2012_nonmpa, lobster_2018_nonmpa)
 
 d_12_18_nonmpa <- cohen.d(lobster_2012_nonmpa, lobster_2018_nonmpa) # Cohen D 2012 vs. 2018 non-MPA
+
 ```
 
 There is not enough evidence to conclude that mean lobster size was significantly different in non-MPA sites in 2012 vs. 2018 (t(`r round(nonmpa_2012_2018_ttest$parameter, 2)`) = `r round(nonmpa_2012_2018_ttest$statistic, 2)`, *p* > 0.05) In addition, the effect size was negligible (Cohen's *d* = `r round(d_12_18_nonmpa$estimate, 2)`).
