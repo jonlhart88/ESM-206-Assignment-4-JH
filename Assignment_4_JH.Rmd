@@ -1,6 +1,6 @@
 ---
-title: "Spiny lobster abundance, community size structure, and fishing pressure along the Santa Barbara coast (2012-2018)"
-author: "Analysis by Jon Hart & Wes Newbury"
+title: "Spiny lobster abundance & community size structure along the Santa Barbara coast (2012-2018)"
+author: "Analysis & Report by Jon Hart & Wes Newbury"
 date: "11/15/2019"
 output: html_document
 ---
@@ -12,7 +12,7 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE, fig.width 
 
 Spiny lobsters grow in great quantities off the coast of Santa Barbara and make delicious seafood. These lobsters are harvested in a number of ways throughout the year and it is thus important to understand the way their population fluctuates as well as what factors inform these changes. 
 
-![](California-Spiny-Lobster.jpg){width=500px}  
+![](California-Spiny-Lobster.jpg){width=400px}  
 
 **Figure 1.** *California Spiny Lobster (Credit: [Catalina Island Marine Institute](https://cimioutdoored.org/ca-spiny-lobster/))*
 
@@ -25,7 +25,7 @@ By comparing lobster abundance, density, and size over five sites in Santa Barba
 
 
 ### **Data and Methods**
-Data for lobster abundance and size from 2012-2018 were collected and provided by the SBC LTER. Lobster abundance and size data was collected annually by divers in late summer before the start of the fishing season at five SBC LTER long term kelp forest study sites: two within MPAs (Naples and Isla Vista) and three outside (Arroyo Quemado, Mohawk and Carpinteria). For more information on collection methods and spatial information, see [Metadata](https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-sbc.77.3). Lobster abundance was compared using total lobster count across all years from 2012-2018. Lobster size distributions were compared using lobster size measurements (mm) across samples taken in all five sites between 2012 & 2018. Mean lobster size in MPA vs. non-MPA sites was compared by two-sample t-tests (α = 0.05 throughout) in 2012, 2018, as well as 2012 vs. 2018. Effect size was compared using Cohen's d. All analyses and figures were prepared using R software version 3.6.1.
+Data for lobster abundance and size from 2012-2018 were collected and provided by the SBC LTER. Lobster abundance and size data was collected annually by divers in late summer before the start of the fishing season at five SBC LTER long term kelp forest study sites: two within MPAs (Naples and Isla Vista) and three outside (Arroyo Quemado, Mohawk and Carpinteria). For more information on collection methods and spatial information, see [Metadata](https://portal.edirepository.org/nis/metadataviewer?packageid=knb-lter-sbc.77.3). Lobster abundance was compared using total number of lobster observations across all years from 2012-2018. Lobster size distributions were compared using lobster size measurements (mm) across samples taken in all five sites in 2012 and 2018. Mean lobster size in MPA vs. non-MPA sites was compared by two-sample t-tests (α = 0.05 throughout) in 2012, 2018, as well as 2012 vs. 2018. Effect size was compared using Cohen's d. All analyses and figures were prepared using R software version 3.6.1.
 
 ### **Results**
 ```{r, include =FALSE}
@@ -38,7 +38,6 @@ library(kableExtra)
 library(knitr)
 library(effsize)
 ```
-
 
 
 ```{r}
@@ -73,7 +72,7 @@ lobster_count_year <- lobster_abundance %>%
 First, lets look at how sample lobster counts changed annually between 2012 & 2018 so we can start to see any trends on how geographic location, year, and whether sites are within a Marine Protected Area (MPA) might have an effect on lobster abundace.
 
 ```{r}
-# Create color vectors for MPA/non-MPA variable in graph
+# Create color vector for MPA/non-MPA variable in graph
 
 colors_abundance <- c("Site within Marine Protected Area" = "#3399FF", "Site outside Marine Protected Area" = "#CC3300")
 
@@ -110,16 +109,19 @@ ggplot(data = lobster_count_year, aes(x = year,
         legend.position = c(.85,.25),
         legend.title = element_blank(),
         legend.text = element_text(size = 15),
-        plot.title = element_text(size = 18),
+        plot.title = element_text(size = 20),
+        plot.subtitle = element_text(size=16),
         plot.caption = element_text(size = 16, hjust = 0),
-        axis.title = element_text(size = 16)) 
+        axis.title = element_text(size = 16),
+        axis.text = element_text(size = 12),
+        strip.text.x = element_text(size = 14))                        
         
 ```
 **Figure 3.** *Annual lobster counts for each of the five sampling locations from 2012-2018. Isla Vista and Naples sampling sites are within a Marine Protected Area (MPA). Arroyo, Carpenteria, and Mohawk sampling sites are not within an MPA. Data: SBC LTER.*
 
 Some interesting trends are immediately noticeable. Lobster abundance increased by a large magnitude between 2016-2017 in both the Carpenteria and Isla Vista sites. However, while lobster abundance continued to quickly rise in Isla Vista from 2017-2018, there was a sharp decline in lobsters at the Carpenteria site during the same period. All sites saw significant declines in lobster counts between 2015-2016, with the exception of the Carpenteria site where lobster abundance began a period of growth. Between 2014-2015 all sites saw an increase in lobster counts with the exception of Arroyo Quemado. This site saw relatively stable annual lobster abundance during the 2012-2018 period. 
 
-One might reasonably assume that lobster counts would be consistently higher in all sites that are within a Marine Protected Area (MPA) as there are catch restrictions in place within their boundaries. While the graph for the Isla Vista site looks more like what we would expect to see in these locations, the Naples site graph conveys that this is not always true. Despite being within an MPA, in 2018 the Carpenteria site (outside MPA) had a larger lobster count sample than the Naples site. 
+One might reasonably assume that lobster counts would be consistently higher in all sites that are within a Marine Protected Area (MPA) as fishing pressure is reduced within their boundaries. While lobster abundance in the Isla Vista site looks more like what we would expect to see in these locations, data collected from the Naples site conveys that this is not always true. Despite being within an MPA, in 2018 the Carpenteria site (outside MPA) had a larger lobster count sample than the Naples site. Looking at the data, we cannot determine if MPA status in isolation has a direct effect on lobster abundance. It appears that other factors, such as ocean conditions, geographical location on the coast, and level of fishing pressure may also play a large role in lobster count differences between the five sites.
 
 
 #### 2. Lobster size distrubutions in 2012 & 2018 
@@ -147,9 +149,9 @@ lobster_size_site <- lobster_data_tidy %>%
 
 
 ```{r}
-# Create color vectors for MPA/non-MPA variable in graph
+# Create color vector for MPA/non-MPA variable in graph
 
-colors_size <- c("MPA Sites" = "#3399FF", "Non-MPA Sites" = "#CC3300")
+colors_size <- c("MPA sites" = "#3399FF", "Non-MPA sites" = "#CC3300")
 ```
 
 
@@ -171,13 +173,14 @@ ggplot(data = lobster_size_site)+
        y = "Size (mm)",
        fill = "Site",
        title = "Lobster Size Distribution",
-       subtitle = "2012, 2018") +
+       subtitle = "2012 & 2018") +
 theme(legend.title = element_blank(),
         legend.text = element_text(size = 20),
         plot.title = element_text(size = 26),
         plot.subtitle = element_text(size = 22),
         axis.title = element_text(size = 22),
-        axis.text = element_text(size = 14))
+        axis.text = element_text(size = 14),
+        strip.text.x = element_text(size = 16))
 
 ```
 **Figure 4.** *Lobster size distributions across five sites in Santa Barbara county in 2012 and 2018. Data: SBC LTER.*  
@@ -244,9 +247,9 @@ lobster_summary_table <- lobster_stats_tidy %>%
   
 ```
 
-#### 3. Do Marine Protected Areas have an affect on lobster size and abundance?
+#### 3. Do Marine Protected Areas have a statistically significant affect on lobster size?
 
-One interesting factor we would like to determine between the five sampling sites is if Marine Protected Areas (MPA) have an affect on average lobster size and abundance. Two of the five sampling sites (Isla Vista & Naples) are within the boundaries of an MPA while the other three (Arroyo, Carpenteria, Mohawk) are not. These sites were grouped together and sample statistics were calculated for the year 2012 and 2018 (Figure 4). 
+One interesting factor we would like to determine between the five sampling sites is if Marine Protected Areas (MPA) have an affect on average lobster size. Two of the five sampling sites (Isla Vista & Naples) are within the boundaries of an MPA while the other three (Arroyo, Carpenteria, Mohawk) are not. These sites were grouped together and sample statistics were calculated for the year 2012 and 2018 (Figure 5). 
 
 ```{r}
 # Make a table for lobster size sample statistics (mean, sd, sample size):
@@ -257,7 +260,7 @@ lobster_summary_table %>%
                      "Mean lobster size (mm)",
                      "Standard Deviation (mm)",
                      "Sample Size (# of lobsters)"),
-        caption = "Figure 4. Lobster size sample statistics grouped in MPA and non-MPA sites in 2012 and 2018."
+        caption = "Figure 5. Lobster size sample statistics grouped in MPA and non-MPA sites in 2012 and 2018."
         ) %>% 
   kable_styling(bootstrap_options = c("striped", "bordered"),
                 full_width = F,
@@ -267,7 +270,7 @@ lobster_summary_table %>%
 In 2012, there were very few lobsters observed within MPA sites (n = 32) while in 2018 lobster observations increased nearly 38 times that amount. Lobster counts within non-MPA sites nearly tripled between 2012 and 2018 measurements. In 2012, lobsters sampled in non-MPA sites were on average 7.54 mm larger then lobsters from MPA sites. However, in 2018 lobsters sampled in non-MPA sites were on average 3.95 mm smaller then lobsters from MPA sites. Comparing average lobster size in 2018 compared to 2012 within MPA sites we see an increase in average lobster size by about 10.19 mm, or about a 15% increase.  Comparing average lobster size in 2018 compared to 2012 within non-MPA sites we see a decrease in average lobster size by about 1.3 mm, or about a 1.7% decrease. 
 
 
-In addition to doing some baseline comparisons of the sample statistics above we would also like to determine if there is any statisitcally significant differences in mean lobster size between MPA and non-MPA sites. To do so, we utilized a two-sample, two-sided t-test to see if the means varied significantly in either direction. For this analysis we have selected a significance level of **α = 0.5** to test the following hypotheses: 
+The smaller average size of lobsters in the MPA group in 2012 may be contributed to the low sample size taken in those sites that year. Therefore, in addition to doing some baseline comparisons of the sample statistics in Figure 4, we would also like to test the sample means to see if there is any statisitcally significant difference in mean lobster size between MPA and non-MPA sites. To do so, we utilized a two-sample, two-sided t-test to see if the means varied significantly in either direction. For this analysis we have selected a significance level of **α = 0.5** to test the following hypotheses: 
 
 
 >H0: Mean size is the same between lobsters in Marine Protected Areas and those from outside of Marine Protected Areas.
@@ -343,10 +346,14 @@ There is not enough evidence to conclude that mean lobster size was significantl
 
 ### **Summary**
 
-- Lobster abundance does not seem to be affected by the MPA status of a site. 
-- The population density of large lobsters increases from 2012 to 2018 in sites within MPAs. The same populations decrease in sites that do not fall within an MPA over this same period of time. 
-- Mean lobster sizes were much larger in MPA sites than they were in non-MPA sites. This difference was nearly twice as great in 2012 as it was in 2018. 
+- Lobster abundance does not seem to be affected by the MPA status of a site. Other factors such as ocean conditions, site-specfic habitat, fishing pressure, etc. are likely to contribute more heavily. 
+
 - Sites within MPAs experience growth in large and small lobster populations. Sites outside of MPAs experience decreases over the same populations respectively. 
+
+- The population density of large lobsters increases from 2012 to 2018 in sites within MPAs. The same populations decrease in sites that do not fall within an MPA over this same period of time. 
+
+- Mean lobster size differs significantly between MPA sites and non-MPA sites. This difference was nearly twice as great in 2012 as it was in 2018. 
+
 
 ### **References** 
 
