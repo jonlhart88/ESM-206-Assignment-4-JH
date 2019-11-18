@@ -274,9 +274,9 @@ In 2012, there were very few lobsters observed within MPA sites (n = 32) while i
 The smaller average size of lobsters in the MPA group in 2012 may be contributed to the low sample size taken in those sites that year. Therefore, in addition to doing some baseline comparisons of the sample statistics in Figure 4, we would also like to test the sample means to see if there is any statisitcally significant difference in mean lobster size between MPA and non-MPA sites. To do so, we utilized a two-sample, two-sided t-test to see if the means varied significantly in either direction. For this analysis we have selected a significance level of **α = 0.5** to test the following hypotheses: 
 
 
->H0: Mean size is the same between lobsters in Marine Protected Areas and those from outside of Marine Protected Areas.
+>$H_0$: Mean size is the same between lobsters in Marine Protected Areas and those from outside of Marine Protected Areas.
 
->H1: Mean size is different between lobsters in Marine Protected Areas and those from outside of Marine Protected Areas.
+>$H_A$: Mean size is different between lobsters in Marine Protected Areas and those from outside of Marine Protected Areas.
 
 ##### **RESULTS:**
 
@@ -295,10 +295,10 @@ lobster_2012_nonmpa <- lobster_stats_tidy %>%
 lobster_2012_ttest <- t.test(lobster_2012_mpa, lobster_2012_nonmpa) # Perform two-sided t-test
 
 
-d_2012 <- cohen.d(lobster_2012_mpa, lobster_2012_nonmpa) # Calculate Cohen D for 2012 mpa vs. non-mpa sites
+d_2012 <- cohen.d(lobster_2012_nonmpa, lobster_2012_mpa) # Calculate Cohen D for 2012 mpa vs. non-mpa sites
 ```
 
-Mean lobster size in MPA sites sampled in 2012 (`r round(mean_mpa_2012, 2)` $\pm$ `r round(sd_mpa_2012, 2)`, n = `r n_mpa_2012`) differed significantly from mean lobster size in non-MPA sites in 2012 (`r round(mean_nonmpa_2012, 2)` $\pm$ `r round(sd_nonmpa_2012, 2)`, n = `r n_nonmpa_2012`) by a two-sided, two sample t-test (t(`r round(lobster_2012_ttest$parameter, 2)`) = `r round(lobster_2012_ttest$statistic, 2)`, *p* = `r round(lobster_2012_ttest$p.value, 3)`) with a medium effect size (Cohen's *d* = `r round(d_2012$estimate, 2)`). These results show evidence suggesting that being within a MPA in 2012 had a medium effect on decreasing mean lobster size as compared to sites outside of an MPA. 
+Mean lobster size in MPA sites sampled in 2012 (`r round(mean_mpa_2012, 2)` $\pm$ `r round(sd_mpa_2012, 2)`, n = `r n_mpa_2012`) differed significantly from mean lobster size in non-MPA sites in 2012 (`r round(mean_nonmpa_2012, 2)` $\pm$ `r round(sd_nonmpa_2012, 2)`, n = `r n_nonmpa_2012`) by a two-sided, two sample t-test (t(`r round(lobster_2012_ttest$parameter, 2)`) = `r round(lobster_2012_ttest$statistic, 2)`, *p* = `r round(lobster_2012_ttest$p.value, 3)`). With a moderate effect size (Cohen's *d* = `r round(d_2012$estimate, 2)`), the magnitude of the increase in mean lobster size within non-MPA sites compared to MPA sites in 2012 is noticeable upon careful review.
 
 ##### *2018 MPA vs. Non-MPA  Sites:*
 ```{r}
@@ -318,7 +318,7 @@ d_2018  <- cohen.d(lobster_2018_mpa, lobster_2018_nonmpa) # Calculate Cohen D fo
 
 ```
 
-Mean lobster size in MPA sites sampled in 2018 (`r round(mean_mpa_2018, 2)` $\pm$ `r round(sd_mpa_2018, 2)`, n = `r n_mpa_2018`) differed significantly from mean lobster size in non-MPA sites in 2018 (`r round(mean_nonmpa_2018, 2)` $\pm$ `r round(sd_nonmpa_2018, 2)`, n = `r n_nonmpa_2012`) by a two-sided, two sample t-test (t(`r round(lobster_2018_ttest$parameter, 2)`) = `r round(lobster_2018_ttest$statistic, 2)`, *p* < 0.001) with a fairly small effect size (Cohen's *d* = `r round(d_2018$estimate, 2)`). These results show evidence suggesting that being within a MPA in 2018 had a small effect on increasing mean lobster size as compared to sites outside of an MPA. 
+Mean lobster size in MPA sites sampled in 2018 (`r round(mean_mpa_2018, 2)` $\pm$ `r round(sd_mpa_2018, 2)`, n = `r n_mpa_2018`) differed significantly from mean lobster size in non-MPA sites in 2018 (`r round(mean_nonmpa_2018, 2)` $\pm$ `r round(sd_nonmpa_2018, 2)`, n = `r n_nonmpa_2012`) by a two-sided, two sample t-test (t(`r round(lobster_2018_ttest$parameter, 2)`) = `r round(lobster_2018_ttest$statistic, 2)`, *p* < 0.001) with a fairly small effect size (Cohen's *d* = `r round(d_2018$estimate, 2)`). While statistically significant, the magnitude of the increase in mean lobster size is small between MPA and non-MPA sites in 2018.
 
 ##### *2012 vs. 2018 MPA Sites:*
 ```{r}
@@ -326,11 +326,11 @@ Mean lobster size in MPA sites sampled in 2018 (`r round(mean_mpa_2018, 2)` $\pm
 
 mpa_2012_2018_ttest <- t.test(lobster_2012_mpa, lobster_2018_mpa) # Perform two-sided t-test
 
-d_12_18_mpa <- cohen.d(lobster_2012_mpa, lobster_2018_mpa) # Calculate Cohen D for 2012 vs. 2018 mpa sites
+d_12_18_mpa <- cohen.d(lobster_2018_mpa, lobster_2012_mpa) # Calculate Cohen D for 2012 vs. 2018 mpa sites
 
 ```
 
-Mean lobster size differed significantly between MPA sites in 2012 and 2018 (t(`r round(mpa_2012_2018_ttest$parameter, 2)`) = `r round(mpa_2012_2018_ttest$statistic, 2)`, *p* < 0.001) with a large effect size (Cohen's *d* = `r round(d_12_18_mpa$estimate, 2)`). 
+Mean lobster size differed significantly between MPA sites in 2012 and 2018 (t(`r round(mpa_2012_2018_ttest$parameter, 2)`) = `r round(mpa_2012_2018_ttest$statistic, 2)`, *p* < 0.001). The magnitude of the difference in lobster size in 2018 compared to 2012 was large (Cohen's *d* = `r round(d_12_18_mpa$estimate, 2)`).  
 
 ##### *2012 vs. 2018 Non-MPA Sites:*
 ```{r}
